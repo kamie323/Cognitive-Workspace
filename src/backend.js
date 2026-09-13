@@ -132,8 +132,9 @@ function createCloudBackend() {
     saveChain = saveChain.catch(() => {}).then(() => saveWorkspace(id, snapshot));
     return saveChain;
   };
-  return { mode: 'cloud', async getSession() { const { data: result, error } = await client.auth.getSession(); if (error) throw error; return result.session ? { user: result.session.user } : null; }, async register(email, password) { const { data: result, error } = await client.auth.signUp({ email, password }); if (error) throw error; return { user: result.user, session: result.session, needsEmailConfirmation: !result.session }; }, async login(email, password) { const { data: result, error } = await client.auth.signInWithPassword({ email, password }); if (error) throw error; return { user: result.user, session: result.session }; }, async logout() { const { error } = await client.auth.signOut(); if (error) throw error; }, loadWorkspace, saveWorkspace: queueSave };
+  return { mode: 'cloud', async getSession() { const { data: result, error } = await client.auth.getSession(); if (error) throw error; return result.session ? { user: result.session.user } : null; }, async getAccessToken() { const { data: result, error } = await client.auth.getSession(); if (error) throw error; return result.session?.access_token || ''; }, async register(email, password) { const { data: result, error } = await client.auth.signUp({ email, password }); if (error) throw error; return { user: result.user, session: result.session, needsEmailConfirmation: !result.session }; }, async login(email, password) { const { data: result, error } = await client.auth.signInWithPassword({ email, password }); if (error) throw error; return { user: result.user, session: result.session }; }, async logout() { const { error } = await client.auth.signOut(); if (error) throw error; }, loadWorkspace, saveWorkspace: queueSave };
 }
 
 export const backend = cloudEnabled ? createCloudBackend() : createLocalBackend();
 export const isCloudConfigured = cloudEnabled;
+export const getAccessToken = async () => backend.getAccessToken?.() || '';

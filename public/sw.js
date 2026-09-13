@@ -1,5 +1,5 @@
-const CACHE = 'focusline-shell-v2';
-const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
+const CACHE = 'exhalation-shell-v3';
+const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/exhalation.png'];
 self.addEventListener('install', (event) => { event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (event) => { event.waitUntil(self.clients.claim()); });
 self.addEventListener('fetch', (event) => {
